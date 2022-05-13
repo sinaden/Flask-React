@@ -6,7 +6,7 @@ import pandas as pd
 from data_module import Data
 import json
 
-app = Flask(__name__, static_url_path='', static_folder='frontend/my-app/build')
+app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 #CORS(app) # comment on deployment
 
 api = Api(app)
