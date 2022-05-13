@@ -42,4 +42,6 @@ api.add_resource(Search, "/search/<string:column>/<string:text>", "/search/<stri
 
 dataHandler.data_handling()
 
-app.run(debug=True)
+@app.route("/", defaults={'path':''})
+def serve(path):
+    return send_from_directory(app.static_folder,'index.html')
