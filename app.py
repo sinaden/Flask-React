@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_restful import Api, Resource
 #from flask_cors import CORS #comment this on deployment
 
@@ -32,16 +32,12 @@ class Search(Resource):
 
 
 
+@app.route("/", defaults={'path':''})
+def serve(path):
+    return send_from_directory(app.static_folder,'index.html')
 
 # register the resource
 api.add_resource(HelloWorld, "/helloworld/<string:name>")
 api.add_resource(Search, "/search/<string:column>/<string:text>", "/search/<string:column>/<string:text>/<string:pagination>")
-#api.add_resource(Search, "/search/<string:column>/<string:text>/<string:pagination>")
-
-
-
 dataHandler.data_handling()
 
-@app.route("/", defaults={'path':''})
-def serve(path):
-    return send_from_directory(app.static_folder,'index.html')
