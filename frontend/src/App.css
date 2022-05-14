@@ -15,7 +15,7 @@ header {
 
 header,
 form {
-  min-height: 20vh;
+  min-height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,6 +26,10 @@ form button {
   font-size: 2rem;
   border: none;
   background: white;
+}
+
+form input {
+  width: 80%;
 }
 form button {
   color: #afcad188;
@@ -143,6 +147,33 @@ tr:last-child td:first-child { border-bottom-left-radius: 10px; }
 tr:last-child td:last-child { border-bottom-right-radius: 10px; }
 
 #table_container {height:570px;}
+#pg_style {padding: 20px;}
+
+#main_search_btn {
+  color: #52808c9a;
+  background: #f7fffe;
+  cursor: pointer;
+  width: 30%;
+  transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
+
+}
+#footer_d {
+  height: 200px;
+}
+
+.page-link {
+  text-decoration: none ;
+  color: inherit ;
+}
+
+.page-link:hover {
+  text-decoration: none ;
+  color: inherit ;
+
+  font-weight:bold;
+}
+
 /*
 */
 /* .App {

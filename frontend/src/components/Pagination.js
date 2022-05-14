@@ -1,47 +1,26 @@
 import React from 'react'
 import {useState, useEffect} from 'react';
 
-
 const Pagination = (props) => {
-
-
-
-    const [pageNo, setPageNo] = useState(1);
+  const [pageNo, setPageNo] = useState(1);
 
     useEffect(()=>{
       setPageNo(1);
     },[])
+
+    // sending the page number to App.js to be sent over to backend
     const pageButtonHandler = (e) => {
-        //console.log(e.target.value);
-        //setInputText(e.target.value);
-        //setSearchText(e.target.value);
-
         setPageNo(parseInt(e.target.value));
-        
         props.pageInfo(e.target.value);
-      
-        
     }
-    const increment = () => {
-      //
-      console.log("inc this ", pageNo);
-
-      //setPageNo((prepageNo) => prepageNo + 1);
-
-      //var newp = pageNo + 1
-      setPageNo({ ...pageNo });
-
-      // setState((state, props) => {
-      //   return { notSaved: size }
-      // }, () => console.log(this.state.notSaved, 'updated notSaved')); 
-
-      console.log("inced this ", pageNo);
-    }
+   
+    // handles logic of the > button (Going to the next page) & sending the data to App.js
     const nextHandler = (e) => {
       
       setPageNo((prepageNo) => prepageNo + 1);
       props.pageInfo(pageNo + 1);
     }
+    // handles logic of the < button (Going to the previous page) & sending the data to App.js
     const prevHandler = (e) => {
       if (pageNo > 1) {
         setPageNo((prepageNo) => prepageNo - 1);
@@ -50,10 +29,10 @@ const Pagination = (props) => {
     }
     
     return (
-      
+      <div className='container'>
       <div className='row'>
         <div className='col'></div>
-        <div className='col'>
+        <div className='col-12' id='pg_style'>
         <nav className='d-flex justify-content-center' id='pag_c' aria-label="Page navigation example">
       <ul className="pagination">
         <li className="page-item">
@@ -85,6 +64,7 @@ const Pagination = (props) => {
         </div>
         <div className='col'></div>
      
+      </div>
       </div>
     );
 }
