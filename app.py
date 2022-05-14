@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory
 from flask_restful import Api, Resource
 #from flask_cors import CORS #comment this on deployment
 
@@ -12,14 +12,9 @@ app = Flask(__name__, static_url_path='', static_folder='frontend/build')
 api = Api(app)
 dataHandler = Data()
 
-class HelloWorld(Resource):
-    def get(self, name):
-        return {"name": name}
-
-    def post(self):
-        return {"data":"posted World"}
-
-
+# Simple search, for the first phase of the project, 
+# Search via get and only one column, no longer being used in UI 
+# but still working through postman 
 class Search(Resource):
 
     def get(self, column, text, pagination = '0'):
@@ -27,17 +22,37 @@ class Search(Resource):
         j_object = json.loads(res)
         return j_object
 
+class UpgradedSearch(Resource):
+
     def post(self):
-        return {"data":"posted World"}
+        json_data = request.get_json(force=True)
+        cols = json_data['cols']
+        terms = json_data['terms']
+        pagination = json_data['pagination']
 
+        print(cols)
+        print(terms)
+        cols = json.loads(cols)
+        terms = json.loads(terms)
 
+        res = dataHandler.advanced_search(cols,terms, pagination)
+        j_object = json.loads(res)
+        return j_object
+
+class DataAccess(Resource):
+
+    def get(self, pagination = '0'):
+        res = dataHandler.get_all(pagination)
+        j_object = json.loads(res)
+        return j_object
 
 @app.route("/", defaults={'path':''})
 def serve(path):
     return send_from_directory(app.static_folder,'index.html')
 
 # register the resource
-api.add_resource(HelloWorld, "/helloworld/<string:name>")
+api.add_resource(UpgradedSearch, "/usearch")
+api.add_resource(DataAccess, "/all", "/all/<string:pagination>")
 api.add_resource(Search, "/search/<string:column>/<string:text>", "/search/<string:column>/<string:text>/<string:pagination>")
 dataHandler.data_handling()
 

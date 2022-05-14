@@ -1,12 +1,14 @@
 
 import pandas as pd
 from os.path import exists
-
+import json
 
 class Data():
 
     def __init__(self):
         self.df = pd.DataFrame()
+        self.no_column_error = "{'error':'column does not exit'}"
+        self.empty_result = "{}"
         self.col_names_map = {"billno":"BillNO",
                     "4digit":"4Digit",
                     "date":"Date",
@@ -53,19 +55,54 @@ class Data():
             self.df.to_pickle("IMEX-IN-2016-06-EX.part2_pickle")
             print("pickle created")
         
+        # Preprocessing data
+
+        # Replacing null values
         self.df = self.df.fillna("")
+        
+        # Convert values to string
+        self.df = self.df.astype(str)
+
+
+    def get_all(self, pagination):
+        a_df = self.df.copy()
+
+        start_rec =  int(pagination) * 5
+        end_rec = min(start_rec + 5, len(a_df))
+
+        print("pagination from record" + str(start_rec) + " to record " + str(end_rec))
+        jt = a_df[start_rec:end_rec].to_json(orient = "index")
+        return jt
+
+    def advanced_search(self,cols,terms, pagination):        
+        a_df = self.df.copy()
+        for k in cols:
+            column = cols[k]
+            text = terms[k]
+            if column in self.col_names_map:
+                column = self.col_names_map[column]
+            else:
+                return self.no_column_error
+            a_df = a_df[a_df[column].str.lower().str.contains(text.lower(), regex=False)]
+
+        if a_df.empty:
+            return self.empty_result
+
+        start_rec =  int(pagination) * 5
+        end_rec = min(start_rec + 5, len(a_df))
+
+        print("pagination from record" + str(start_rec) + " to record " + str(end_rec))
+        jt = a_df[start_rec:end_rec].to_json(orient = "index")
+        return jt
 
     def search(self, column, text, pagination):
-        # print("-------SEARCHDATA start-----------")
-        # print(self.df.head())
-        # print("-------SEARCHDATA end-------------")
 
         text = text.lower()
         
         if column in self.col_names_map:
             column = self.col_names_map[column]
         else:
-            return "{}"
+            return self.no_column_error
         t = self.df[self.df[column].str.lower().str.contains(text, regex=False)]
         start_rec =  int(pagination) * 5
         end_rec = min(start_rec + 5, len(t))
